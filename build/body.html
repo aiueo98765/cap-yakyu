@@ -1,0 +1,118 @@
+<canvas id="c"></canvas>
+<canvas id="ov"></canvas>
+
+<!-- スコアボード（上）。オンラインのときは 相手の名前とつながり具合の帯も出す -->
+<div id="hud" class="hide">
+  <div id="sb">
+    <div class="teams">
+      <div class="tm" id="tmA"><span><i id="cA"></i><em id="nA">CPU</em></span><b id="scA">0</b></div>
+      <div class="tm" id="tmH"><span><i id="cH"></i><em id="nH">あなた</em></span><b id="scH">0</b></div>
+    </div>
+    <div class="inn"><span id="innN">1</span><small id="innH">回表</small></div>
+    <div class="cnt"><span>B</span><span><i class="b"></i><i class="b"></i><i class="b"></i></span><span>S</span><span><i class="s"></i><i class="s"></i></span><span>O</span><span><i class="o"></i><i class="o"></i></span></div>
+    <div id="bases"><i></i><i></i><i></i></div>
+  </div>
+  <div id="onBar" class="hide">
+    <span class="nm"><i></i><span id="onBarN">あいて</span></span><span class="sep"></span>
+    <span class="pg"><b></b><b></b><b></b></span><span class="ms" id="onBarMs">‥</span><span class="tp" id="onBarTp"></span>
+  </div>
+  <div id="subrow"><div id="who" class="hide"></div><div id="pcnt" class="hide">0球</div></div>
+</div>
+
+<button id="back" class="rbtn hide" aria-label="もどる">‹</button>
+<button id="snd" class="rbtn hide" aria-label="音">♪</button>
+<button id="chg" class="hide">投手交代</button>
+<button id="help" class="hide" aria-label="投げ方のお手本">?</button>
+
+<div id="vbtns" class="hide"><button data-v="1">⤴ 浮く</button><button data-v="0" class="on">まっすぐ</button><button data-v="-1">⤵ 落ちる</button><button data-v="K" class="kime" id="kimeB">決め球<small id="kimeN"></small></button></div>
+
+<!-- スタンプ（オンラインのときだけ） -->
+<button id="emoB" class="hide" aria-label="かけ声を送る">💬</button>
+<div id="emoT" class="hide"></div>
+<div id="emoS"></div>
+
+<div id="demo"></div>
+<div id="call"></div>
+<div id="info"></div>
+<div id="hint"></div>
+
+<!-- タイトル -->
+<div id="title" class="hide">
+  <div class="logo"><div class="capmark"></div><h1>キャップ<span>野球</span></h1><p>ペットボトルのキャップで、体育館の野球。</p></div>
+  <div class="menu">
+    <button class="btn big" id="bCup">大会に出る</button>
+    <p class="note" id="cupNote"></p>
+    <div class="grid">
+      <button class="btn blue wide" id="bOn">オンライン対戦<small>別のスマホの人と</small></button>
+      <button class="btn sub sm" id="bPitch">投げる練習</button>
+      <button class="btn sub sm" id="bBat">打つ練習</button>
+      <button class="btn gold wide hide" id="bFree">★ 強さを選んで対戦</button>
+    </div>
+    <button id="me" aria-label="名前を変える">👤 <b id="meName">あなた</b> ✎</button>
+  </div>
+  <div class="adwrap" id="ad1"></div>
+  <div class="foot"><a href="/games/cap-yakyu/">遊び方・ほかのゲーム ›</a>N.K. Works</div>
+</div>
+<div id="tbar" class="hide"><button id="bSnd" aria-label="音">♪</button><button id="bSet" aria-label="設定">⚙</button></div>
+
+<!-- 勝ち抜き大会 -->
+<div id="cup" class="scr hide"><div class="panel"><h2>勝ち抜き大会</h2><p class="sub" id="cupSub"></p><ol id="cupList"></ol><div class="btns"><button class="btn" id="bPlay">プレイボール</button><button class="btn sub sm" id="bCupBack">もどる</button></div></div></div>
+
+<!-- 強さを選んで対戦 -->
+<div id="free" class="scr hide"><div class="panel"><h2>強さを選んで対戦</h2><p class="sub">相手と強さを選んで1試合。勝つと その強さに★</p><ol id="freeTeams"></ol><p class="rdl" id="freeLvT">強さ（1 やさしい 〜 10 とても強い）</p><div id="freeLv"></div><div class="btns"><button class="btn" id="bFreeGo">プレイボール</button><button class="btn sub sm" id="bFreeBack">もどる</button></div></div></div>
+
+<!-- オンライン対戦の待合 -->
+<div id="online" class="scr hide"><div class="panel">
+  <h2>オンライン対戦</h2>
+  <p class="sub">別のスマホの人と 3回まで対戦<br>同点のときは タイブレーク</p>
+  <div id="onMenu">
+    <div class="tabs" id="onTabs"><button data-t="quick" class="on">だれかと</button><button data-t="make">部屋を作る</button><button data-t="join">番号で入る</button></div>
+    <div class="tabpane" data-p="quick">
+      <p class="lead">いま待っている人と すぐにつなぎます。<br>いなければ そのまま待てます。</p>
+      <div class="btns"><button class="btn blue" id="bOnQuick">相手をさがす</button></div>
+    </div>
+    <div class="tabpane hide" data-p="make">
+      <p class="lead">4けたの番号が出ます。<br>その番号を友だちに伝えてね。</p>
+      <div class="btns"><button class="btn blue" id="bOnMake">部屋を作る</button></div>
+    </div>
+    <div class="tabpane hide" data-p="join">
+      <p class="lead">友だちに聞いた4けたの番号を入れてね。</p>
+      <div class="onJoin"><input id="onCode" type="tel" inputmode="numeric" maxlength="4" placeholder="4けたの番号" autocomplete="off" aria-label="部屋の番号"><button class="btn blue" id="bOnJoin">入る</button></div>
+    </div>
+    <button class="lnk" id="bOnName">👤 あなたの名前：<b id="onNameShow">あなた</b> ✎</button>
+  </div>
+  <div id="onWait" class="hide">
+    <p class="onCode" id="onCodeShow"></p>
+    <div class="onCodeRow hide" id="onShare"><button id="bOnCopy">番号をコピー</button><button id="bOnLink">リンクを送る</button></div>
+    <p class="sub" id="onMsg"></p>
+    <p id="onElapsed"></p>
+    <div class="spin"></div>
+  </div>
+  <p class="onErr" id="onErr"></p>
+  <div class="btns"><button class="btn sub sm" id="bOnBack">もどる</button></div>
+</div></div>
+
+<!-- 試合の結果 -->
+<div id="res" class="scr hide"><div class="panel"><p class="rdl" id="resRd"></p><h2 id="resT"></h2><p class="sub" id="resSub"></p><table id="line"></table><div id="stats" class="hide"></div><div class="btns" id="resBtns"></div></div><div class="adwrap" id="ad2"></div></div>
+
+<!-- 設定 -->
+<div id="set" class="scr hide"><div class="panel">
+  <h2>設定</h2>
+  <div class="opt"><p>打つときの目安の円</p><div class="seg" data-k="guide"><button data-v="on">あり</button><button data-v="off">なし</button></div><small>投げた球が「この辺に来る」ちぢむ円。なしにすると むずかしくなります</small></div>
+  <div class="opt"><p>画質</p><div class="seg" data-k="quality"><button data-v="high">きれい</button><button data-v="low">軽い</button></div><small>「軽い」は かげを簡単にして、動きをなめらかにします</small></div>
+  <div class="opt"><p>手ごたえ（振動）</p><div class="seg" data-k="haptic"><button data-v="on">あり</button><button data-v="off">なし</button></div><small>打った時・三振の時に 少し振動します（対応している機種だけ）</small></div>
+  <div class="opt"><p>オンラインで使う名前</p><button class="btn sub sm" id="bSetName" style="width:100%;min-width:0">👤 <b id="setNameShow">あなた</b> を変える</button></div>
+  <div class="btns"><button class="btn" id="bSetOk">OK</button></div>
+</div></div>
+
+<!-- 名前を決める -->
+<div id="nm" class="scr hide"><div class="panel">
+  <h2>名前</h2><p class="sub">オンライン対戦で 相手に見える名前です</p>
+  <div class="opt"><input id="nmIn" class="tin" maxlength="10" placeholder="なまえ（10文字まで）" autocomplete="off" aria-label="名前"></div>
+  <div class="btns"><button class="btn" id="bNmOk">これにする</button><button class="btn sub sm" id="bNmBack">やめる</button></div>
+</div></div>
+
+<div id="band"><b></b><small></small></div>
+<div id="toast"></div>
+<div id="fade"></div>
+<div id="load"><div class="spin"></div><p>体育館を準備中…</p></div>
